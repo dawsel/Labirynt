@@ -24,7 +24,7 @@ namespace Labirynt
         {
             Log.Info($"[KSZTALT2D]({Tag}) - Has been destroyed");
 
-            Gra.UNRegisterShape(this);
+            Gra.unRegisterShape(this);
         }
     }
 }

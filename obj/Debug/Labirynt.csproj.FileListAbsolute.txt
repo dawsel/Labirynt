@@ -5,3 +5,10 @@ C:\Users\dawse\Desktop\JPWP\Labirynt\Labirynt\obj\Debug\Labirynt.csproj.Assembly
 C:\Users\dawse\Desktop\JPWP\Labirynt\Labirynt\obj\Debug\Labirynt.csproj.CoreCompileInputs.cache
 C:\Users\dawse\Desktop\JPWP\Labirynt\Labirynt\obj\Debug\Labirynt.exe
 C:\Users\dawse\Desktop\JPWP\Labirynt\Labirynt\obj\Debug\Labirynt.pdb
+C:\Users\dawse\Desktop\Labirynt\Labirynt\bin\Debug\Labirynt.exe.config
+C:\Users\dawse\Desktop\Labirynt\Labirynt\bin\Debug\Labirynt.exe
+C:\Users\dawse\Desktop\Labirynt\Labirynt\bin\Debug\Labirynt.pdb
+C:\Users\dawse\Desktop\Labirynt\Labirynt\obj\Debug\Labirynt.csproj.AssemblyReference.cache
+C:\Users\dawse\Desktop\Labirynt\Labirynt\obj\Debug\Labirynt.csproj.CoreCompileInputs.cache
+C:\Users\dawse\Desktop\Labirynt\Labirynt\obj\Debug\Labirynt.exe
+C:\Users\dawse\Desktop\Labirynt\Labirynt\obj\Debug\Labirynt.pdb

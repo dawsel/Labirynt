@@ -31,9 +31,10 @@ namespace Labirynt
 
 
         private static List<Ksztalt2D> AllShapes = new List<Ksztalt2D>();
-
+        private static List<Sprite2D> AllSprites = new List<Sprite2D>();
         public Color BackgroundColor = Color.Red;
 
+        public Vector2 CameraPosition = Vector2.Zero();
         
         public Gra (Vector2 ScreenSize, string Title)
         {
@@ -57,9 +58,17 @@ namespace Labirynt
         {
             AllShapes.Add(shape);
         }
-        public static void UNRegisterShape(Ksztalt2D shape)
+        public static void RegisterSprite(Sprite2D sprite)
+        {
+            AllSprites.Add(sprite);
+        }
+        public static void unRegisterShape(Ksztalt2D shape)
         {
             AllShapes.Remove(shape);
+        }
+        public static void unRegisterSprite(Sprite2D sprite)
+        {
+            AllSprites.Remove(sprite);
         }
 
         void GameLoop()
@@ -88,10 +97,17 @@ namespace Labirynt
             Graphics g = e.Graphics;
             g.Clear(BackgroundColor);
 
+
+            g.TranslateTransform(CameraPosition.X, CameraPosition.Y);
+
             foreach(Ksztalt2D shape in AllShapes)
             {
                 g.FillRectangle(new SolidBrush(Color.Red), shape.Position.X, shape.Position.Y, shape.Scale.X, shape.Scale.Y);
 
+            }
+            foreach(Sprite2D sprite in AllSprites)
+            {
+                g.DrawImage(sprite.Sprite, sprite.Position.X, sprite.Position.Y, sprite.Scale.X, sprite.Scale.Y);
             }
         }
 
