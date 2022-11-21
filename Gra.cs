@@ -30,8 +30,8 @@ namespace Labirynt
 
 
 
-        private static List<Ksztalt2D> AllShapes = new List<Ksztalt2D>();
-        private static List<Sprite2D> AllSprites = new List<Sprite2D>();
+        public static List<Ksztalt2D> AllShapes = new List<Ksztalt2D>();
+        public static List<Sprite2D> AllSprites = new List<Sprite2D>();
         public Color BackgroundColor = Color.Red;
 
         public Vector2 CameraPosition = Vector2.Zero();
@@ -46,14 +46,33 @@ namespace Labirynt
             Window.Size = new Size((int)this.ScreenSize.X, (int)this.ScreenSize.Y);
             Window.Text = this.Title;
             Window.Paint += Renderer;
+            Window.KeyDown += Window_KeyDown;
+            Window.KeyUp += Window_KeyUp;
+            Window.FormBorderStyle = FormBorderStyle.FixedToolWindow;
 
-            
+            Window.FormClosing += Window_FormClosing;
 
             GameLoopThread = new Thread(GameLoop);
             GameLoopThread.Start();
 
             Application.Run(Window);
         }
+
+        private void Window_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            GameLoopThread.Abort();
+        }
+
+        private void Window_KeyUp(object sender, KeyEventArgs e)
+        {
+            GetKeyUp(e);
+        }
+
+        private void Window_KeyDown(object sender, KeyEventArgs e)
+        {
+            GetKeyDown(e);
+        }
+
         public static void RegisterShape(Ksztalt2D shape)
         {
             AllShapes.Add(shape);
@@ -114,6 +133,7 @@ namespace Labirynt
         public abstract void OnLoad();
         public abstract void OnUpdate();
         public abstract void OnDraw();
-
+        public abstract void GetKeyDown(KeyEventArgs e);
+        public abstract void GetKeyUp(KeyEventArgs e);
     }
 }

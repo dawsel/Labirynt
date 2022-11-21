@@ -29,6 +29,44 @@ namespace Labirynt
             Gra.RegisterSprite(this);
         }
 
+        public bool IsColliding(Sprite2D a, Sprite2D b)
+        {
+            if(a.Position.X < b.Position.X + b.Scale.X &&
+                a.Position.X + a.Scale.X > b.Position.X &&
+                a.Position.Y < b.Position.Y + b.Scale.Y &&
+                a.Position.Y + a.Scale.Y > b.Position.Y)
+              
+            {
+                return true;
+            }
+            
+            
+            return false;
+
+        }
+
+        public bool IsColliding(string tag)
+        {
+    
+           foreach(Sprite2D b in Gra.AllSprites)
+            {
+                if (b.Tag == tag)
+                {
+                    if (
+                    Position.X < b.Position.X + b.Scale.X &&
+                    Position.X + Scale.X > b.Position.X &&
+                    Position.Y < b.Position.Y + b.Scale.Y &&
+                    Position.Y + Scale.Y > b.Position.Y)
+
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+
+        }
+
         public void DestroySelf()
         {
             Gra.unRegisterSprite(this);
