@@ -14,6 +14,7 @@ namespace Labirynt
         public string Directory = "";
         public string Tag = "";
         public Bitmap Sprite = null;
+        public bool IsReference = false;
         public Sprite2D(Vector2 Position, Vector2 Scale, string Directory, string Tag )
         {
             this.Position = Position;
@@ -24,6 +25,30 @@ namespace Labirynt
             Image tmp = Image.FromFile($"Assets/Sprites/{Directory}.png");
             Bitmap sprite = new Bitmap(tmp);
             Sprite = sprite;
+
+            Log.Info($"[KSZTALT2D]({Tag}) - Has been registered");
+            Gra.RegisterSprite(this);
+        }
+        public Sprite2D( string Directory)
+        {
+            this.IsReference = true;
+            this.Directory = Directory;
+          
+            Image tmp = Image.FromFile($"Assets/Sprites/{Directory}.png");
+            Bitmap sprite = new Bitmap(tmp);
+            Sprite = sprite;
+
+            Log.Info($"[KSZTALT2D]({Tag}) - Has been registered");
+            Gra.RegisterSprite(this);
+        }
+
+        public Sprite2D(Vector2 Position, Vector2 Scale, Sprite2D reference, string Tag)
+        {
+            this.Position = Position;
+            this.Scale = Scale;
+            this.Tag = Tag;
+
+            Sprite = reference.Sprite;
 
             Log.Info($"[KSZTALT2D]({Tag}) - Has been registered");
             Gra.RegisterSprite(this);
