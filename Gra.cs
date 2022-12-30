@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Drawing;
 using System.Windows.Forms;
 using System.Threading;
-
+using System.Diagnostics;
 namespace Labirynt
 {
     
@@ -14,7 +14,9 @@ namespace Labirynt
     {
         public Canvas()
         {
+           
             this.DoubleBuffered = true;
+            
         }
     }
     
@@ -27,8 +29,10 @@ namespace Labirynt
         private string Title = "Labirynt";
         private Canvas Window = null;
         private Thread GameLoopThread = null;
-
-
+        public int level = 1;
+        public bool zwyciestwo = false;
+        string czas;
+        Stopwatch stopWatch = new Stopwatch();
 
         public static List<Ksztalt2D> AllShapes = new List<Ksztalt2D>();
         public static List<Sprite2D> AllSprites = new List<Sprite2D>();
@@ -49,11 +53,11 @@ namespace Labirynt
             Window.KeyDown += Window_KeyDown;
             Window.KeyUp += Window_KeyUp;
             Window.FormBorderStyle = FormBorderStyle.FixedToolWindow;
-
             Window.FormClosing += Window_FormClosing;
 
             GameLoopThread = new Thread(GameLoop);
             GameLoopThread.Start();
+           
 
             Application.Run(Window);
         }
@@ -89,10 +93,13 @@ namespace Labirynt
         {
             AllSprites.Remove(sprite);
         }
-
+        
         void GameLoop()
         {
+           
+
             OnLoad();
+            stopWatch.Start();
             while (GameLoopThread.IsAlive)
             {
                 try
@@ -102,6 +109,19 @@ namespace Labirynt
                     Window.BeginInvoke((MethodInvoker)delegate { Window.Refresh(); });
                     OnUpdate();
                     Thread.Sleep(1);
+                 
+                    if (zwyciestwo == true)
+                    {
+                        stopWatch.Stop();
+
+                    }
+                    TimeSpan ts = stopWatch.Elapsed;
+                    string elapsedTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}",
+                    ts.Hours, ts.Minutes, ts.Seconds,
+                    ts.Milliseconds / 10);
+                    czas = elapsedTime;
+
+
                 }
                 catch
                 {
@@ -109,12 +129,34 @@ namespace Labirynt
                 }
             }
         }
+       
+
 
 
         private void Renderer(object sender, PaintEventArgs e)
         {
             Graphics g = e.Graphics;
             g.Clear(BackgroundColor);
+            Font fnt = new Font("Arial", 30);
+            Font fnt2 = new Font("Arial", 60);
+            if (zwyciestwo == true)
+            {
+                g.DrawString("Zwycięstwo!",
+                fnt2, System.Drawing.Brushes.Blue, new Point(400, 400));
+            }
+            if (level < 3)
+            {
+                g.DrawString("Poziom: " + level,
+                fnt, System.Drawing.Brushes.Blue, new Point(150, 925));
+            }
+            else
+            {
+                g.DrawString("Poziom: 3" ,
+                fnt, System.Drawing.Brushes.Blue, new Point(150, 925));
+            }
+            g.DrawString("Czas: "+ czas,
+               fnt, System.Drawing.Brushes.Blue, new Point(800, 925));
+
 
 
             g.TranslateTransform(CameraPosition.X, CameraPosition.Y);

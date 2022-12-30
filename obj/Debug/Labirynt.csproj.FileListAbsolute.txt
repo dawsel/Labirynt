@@ -12,3 +12,5 @@ C:\Users\dawse\Desktop\Labirynt\Labirynt\obj\Debug\Labirynt.csproj.AssemblyRefer
 C:\Users\dawse\Desktop\Labirynt\Labirynt\obj\Debug\Labirynt.csproj.CoreCompileInputs.cache
 C:\Users\dawse\Desktop\Labirynt\Labirynt\obj\Debug\Labirynt.exe
 C:\Users\dawse\Desktop\Labirynt\Labirynt\obj\Debug\Labirynt.pdb
+C:\Users\dawse\Desktop\Labirynt\Labirynt\obj\Debug\Labirynt.Canvas.resources
+C:\Users\dawse\Desktop\Labirynt\Labirynt\obj\Debug\Labirynt.csproj.GenerateResource.cache
