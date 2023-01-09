@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace Labirynt
 {
+    /// <summary>
+    /// Definiuje ksztalt 
+    /// </summary>
     public class Ksztalt2D
     {
         public Vector2 Position = null;

@@ -8,6 +8,10 @@ namespace Labirynt
 {
     public class Log
     {
+        /// <summary>
+        /// Pozwala obserwowac w konsoli status programu
+        /// </summary>
+        /// <param name="msg"></param>
         public static void Normal(string msg)
         {
             Console.ForegroundColor = ConsoleColor.White;

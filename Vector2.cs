@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace Labirynt
 {
+    /// <summary>
+    /// Uniwersalna klasa do przechowywanie np. pozycji
+    /// </summary>
     public class Vector2
     {
         public float X { get; set; }
@@ -21,7 +24,10 @@ namespace Labirynt
             this.X = X;
             this.Y = Y;
         }
-
+        /// <summary>
+        /// Zerowanie wektora
+        /// </summary>
+        /// <returns></returns>
         public static Vector2 Zero()
         {
             return new Vector2(0,0);

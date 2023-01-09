@@ -7,39 +7,86 @@ using System.Drawing;
 using System.Windows.Forms;
 using System.Threading;
 using System.Diagnostics;
+using System.IO;
+
 namespace Labirynt
 {
-    
+    /// <summary>
+    /// Canvas
+    /// </summary>
     class Canvas : Form
     {
+        /// <summary>
+        /// Zapobiega migotaniu
+        /// </summary>
         public Canvas()
         {
            
             this.DoubleBuffered = true;
             
         }
+
+       
     }
     
     
     
-    
+    /// <summary>
+    /// Glowna klasa
+    /// </summary>
     public abstract class Gra
     {
+        /// <summary>
+        /// Rozmiar aplikacji 
+        /// </summary>
         private Vector2 ScreenSize = new Vector2(512, 512);
+        /// <summary>
+        /// Tytuł aplikacji
+        /// </summary>
         private string Title = "Labirynt";
         private Canvas Window = null;
         private Thread GameLoopThread = null;
+        /// <summary>
+        /// Numer poziomu
+        /// </summary>
         public int level = 1;
+        /// <summary>
+        /// Czy zwyciestwo
+        /// </summary>
         public bool zwyciestwo = false;
+        /// <summary>
+        /// Czy reset
+        /// </summary>
+        bool reset = false;
+        TimeSpan ts;
+        TimeSpan best;
+        string s;
+        string elapsedTime;
+        string bestTime;
+        /// <summary>
+        /// Czas gry 
+        /// </summary>
         string czas;
         Stopwatch stopWatch = new Stopwatch();
-
+        /// <summary>
+        /// Lista kształtów 
+        /// </summary>
         public static List<Ksztalt2D> AllShapes = new List<Ksztalt2D>();
+        /// <summary>
+        /// Lista spritow 
+        /// </summary>
         public static List<Sprite2D> AllSprites = new List<Sprite2D>();
+        /// <summary>
+        /// Kolor tla
+        /// </summary>
         public Color BackgroundColor = Color.Red;
 
         public Vector2 CameraPosition = Vector2.Zero();
-        
+        /// <summary>
+        /// Glowna funkcja 
+        /// </summary>
+        /// <param name="ScreenSize"></param>
+        /// <param name="Title"></param>
         public Gra (Vector2 ScreenSize, string Title)
         {
             Log.Info("Game is starting...");
@@ -52,6 +99,7 @@ namespace Labirynt
             Window.Paint += Renderer;
             Window.KeyDown += Window_KeyDown;
             Window.KeyUp += Window_KeyUp;
+            Window.MouseDown += MouseDown;
             Window.FormBorderStyle = FormBorderStyle.FixedToolWindow;
             Window.FormClosing += Window_FormClosing;
 
@@ -61,7 +109,11 @@ namespace Labirynt
 
             Application.Run(Window);
         }
-
+        /// <summary>
+        /// Zamykanie aplikacji 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Window_FormClosing(object sender, FormClosingEventArgs e)
         {
             GameLoopThread.Abort();
@@ -81,6 +133,10 @@ namespace Labirynt
         {
             AllShapes.Add(shape);
         }
+        /// <summary>
+        /// Dodanie spritea
+        /// </summary>
+        /// <param name="sprite"></param>
         public static void RegisterSprite(Sprite2D sprite)
         {
             AllSprites.Add(sprite);
@@ -89,16 +145,23 @@ namespace Labirynt
         {
             AllShapes.Remove(shape);
         }
+        /// <summary>
+        /// Usuniecie sprita
+        /// </summary>
+        /// <param name="sprite"></param>
         public static void unRegisterSprite(Sprite2D sprite)
         {
             AllSprites.Remove(sprite);
         }
-        
+        /// <summary>
+        /// Petla gry
+        /// </summary>
         void GameLoop()
         {
            
 
             OnLoad();
+            
             stopWatch.Start();
             while (GameLoopThread.IsAlive)
             {
@@ -115,8 +178,8 @@ namespace Labirynt
                         stopWatch.Stop();
 
                     }
-                    TimeSpan ts = stopWatch.Elapsed;
-                    string elapsedTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}",
+                    ts = stopWatch.Elapsed;
+                    elapsedTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}",
                     ts.Hours, ts.Minutes, ts.Seconds,
                     ts.Milliseconds / 10);
                     czas = elapsedTime;
@@ -132,17 +195,35 @@ namespace Labirynt
        
 
 
-
+        /// <summary>
+        /// Funkcja rysujaca obiekty i napisy
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Renderer(object sender, PaintEventArgs e)
         {
             Graphics g = e.Graphics;
             g.Clear(BackgroundColor);
+            if (reset == true)
+            {
+                g.Clear(BackgroundColor);
+                reset = false;
+                zwyciestwo = false;
+                
+                
+            }
             Font fnt = new Font("Arial", 30);
             Font fnt2 = new Font("Arial", 60);
+            Font fnt3 = new Font("Arial", 20);
             if (zwyciestwo == true)
             {
                 g.DrawString("Zwycięstwo!",
                 fnt2, System.Drawing.Brushes.Blue, new Point(400, 400));
+                czasy();
+                g.DrawString("Najlepszy czas: "+ bestTime,
+                fnt2, System.Drawing.Brushes.Blue, new Point(200, 500));
+                
+                
             }
             if (level < 3)
             {
@@ -156,6 +237,11 @@ namespace Labirynt
             }
             g.DrawString("Czas: "+ czas,
                fnt, System.Drawing.Brushes.Blue, new Point(800, 925));
+
+            g.FillRectangle(new SolidBrush(Color.Red), 500, 900, 200, 80);
+            g.DrawString("RESTART", fnt3, System.Drawing.Brushes.Blue, new Point(535, 925));
+
+            
 
 
 
@@ -180,9 +266,72 @@ namespace Labirynt
 
             catch { }
         }
+        private void MouseDown(object sender, System.Windows.Forms.MouseEventArgs e)
+        {
+            // Update the mouse path with the mouse information
+            Point mouseDownLocation = new Point(e.X, e.Y);
 
+            Console.WriteLine(mouseDownLocation);
+
+
+            if (e.X >= 500 && e.X <= 700 && e.Y >=900 && e.Y<=980)
+            {
+                level = 1;
+                AllSprites.Clear();
+                reset = true;
+                czas = null;
+                
+                OnLoad();
+                
+                stopWatch.Reset();
+                stopWatch.Start();
+
+            }
+            
+        
+        }
+        /// <summary>
+        /// Funkcja zapisujaca i odczytujaca najlepszy czas
+        /// </summary>
+       private void czasy()
+        {
+            string path = @"czasy.txt";
+            if (TimeSpan.Compare(best,ts)==1)
+            {
+                // Create a file to write to.
+                using (StreamWriter sw = File.CreateText(path))
+                {
+                    
+                    sw.WriteLine(ts);
+                    //Console.WriteLine(ts);
+                }
+            }
+
+            // Open the file to read from.
+            using (StreamReader sr = File.OpenText(path))
+            {
+                
+                while ((s = sr.ReadLine()) != null)
+                {
+                    best = TimeSpan.Parse(s);
+                    bestTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}",
+                    best.Hours, best.Minutes, best.Seconds,
+                    best.Milliseconds / 10);
+                    Console.WriteLine(s);
+                    //Console.WriteLine(s);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Ladowanie mapy 
+        /// </summary>
         public abstract void OnLoad();
+        /// <summary>
+        /// Pozwala zmienic pozycje gracza
+        /// </summary>
         public abstract void OnUpdate();
+        
         public abstract void OnDraw();
         public abstract void GetKeyDown(KeyEventArgs e);
         public abstract void GetKeyUp(KeyEventArgs e);
